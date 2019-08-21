@@ -26,7 +26,7 @@ type bill struct {
 type IBill interface {
 	SetPrice(int)
 	Change() (*pogo.Bill, *pogo.Bill)
-	GetPure() *pogo.Bill
+	GetPtr() *pogo.Bill
 	StartAudit()
 }
 
@@ -38,17 +38,15 @@ func (b *bill) SetPrice(price int)  {
 	b.Price = price
 }
 
-func (b *bill) GetPure() *pogo.Bill {
+func (b *bill) GetPtr() *pogo.Bill {
 	return b.Bill
 }
 
 func (b *bill) StartAudit() {
-	var old *pogo.Bill
 	if b.ID == 0 {
-		old = nil
+		b.before = nil
 	} else {
-		old = &pogo.Bill{}
-		copier.Copy(old, b)
+		b.before = &pogo.Bill{}
+		copier.Copy(b.before, b)
 	}
-	b.before = old
 }
